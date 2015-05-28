@@ -30,8 +30,9 @@ var Faceplate = new (Faceplate = function()
 					case 'dob month': return (parseInt(val) > 0 && parseInt(val) <= 12) ? true : false;
 					case 'dob year': return (parseInt(val) > 1900 && parseInt(val) < new Date().getFullYear()) ? true : false;
 					case 'email': return val.match(/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/) ? true : false;
+					case 'mobile': return val.trim().match(/^(((\+44\s?\d{4}|\(?0\d{4}\)?)\s?\d{3}\s?\d{3})|((\+44\s?\d{3}|\(?0\d{3}\)?)\s?\d{3}\s?\d{4})|((\+44\s?\d{2}|\(?0\d{2}\)?)\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$/) ? true : false;
 					case 'number': return val.trim().match(/^-?([0-9]+)(\.([0-9]+))?$/) ? true : false;
-					case 'telephone': return val.trim().match(/^(\+([0-9]{1,5})|07)(?!.*(\d)\1{9,})\d{9,}$/) ? true : false;
+					case 'telephone': return val.trim().match(/^\+?((\(?0\d{4}\)?\s?\d{3}\s?\d{3})|(\(?0\d{3}\)?\s?\d{3}\s?\d{4})|(\(?0\d{2}\)?\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$/) ? true : false;
 					case 'text': case 'selected': return val.trim() ? true : false;
 				}
 
