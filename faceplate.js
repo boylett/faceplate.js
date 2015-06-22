@@ -110,7 +110,8 @@ var Faceplate = new (Faceplate = function()
 			$this.Validate($currentstep);
 
 			if($form.find('.has-error').length == 0)
-				$currentstep = $currentstep.removeClass('has-errors').hide().next('.step').show();
+				$currentstep = $currentstep.removeClass('has-errors').hide().trigger('hide')
+					.next('.step').show().trigger('show');
 
 			else
 				$currentstep.addClass('has-errors').find('.has-error[valid]').first().focus();
@@ -138,6 +139,8 @@ var Faceplate = new (Faceplate = function()
 
 				return !1;
 			}
+			
+			$form.trigger('beforesubmit');
 		});
 
 		return $this;
