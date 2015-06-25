@@ -39,7 +39,10 @@ var Faceplate = new (Faceplate = function()
 				if(rule[0] == '=' || (rule[0] == '!' && rule[1] == '='))
 				{
 					rule = rule.substr(rule[0] == '=' ? 1 : 2).trim();
-					return (val && val == $('*[name="' + rule + '"]')[0].value) ? (rule[0] == '=' ? true : false) : (rule[0] == '=' ? false : true);
+					
+					if(rule[0] == '=')
+						return (val && val == $('*[name="' + rule + '"]')[0].value) ? true : false;
+						return (val && val != $('*[name="' + rule + '"]')[0].value) ? true : false;
 				}
 			};
 
