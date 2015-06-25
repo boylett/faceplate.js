@@ -36,10 +36,10 @@ var Faceplate = new (Faceplate = function()
 					case 'text': case 'selected': return val.trim() ? true : false;
 				}
 
-				if(rule[0] == '=')
+				if(rule[0] == '=' || (rule[0] == '!' && rule[1] == '='))
 				{
-					rule = rule.substr(1).trim();
-					return (val && val == $('*[name="' + rule + '"]')[0].value) ? true : false;
+					rule = rule.substr(rule[0] == '=' ? 1 : 2).trim();
+					return (val && val == $('*[name="' + rule + '"]')[0].value) ? (rule[0] == '=' ? true : false) : (rule[0] == '=' ? false : true);
 				}
 			};
 
