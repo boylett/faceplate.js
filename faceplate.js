@@ -38,14 +38,16 @@ var Faceplate = new (Faceplate = function()
 
 				if(rule[0] == '=')
 				{
-					rule = rule.substr(1).trim();
-					return (val == $('*[name="' + rule + '"]')[0].value) ? true : false;
+					var casesensitive = !!rule.match(/^=\(i\)(.*)$/i);
+						rule = rule.substr(casesensitive ? 4 : 1).trim();
+					return (casesensitive ? (val.toLowerCase() == $('*[name="' + rule + '"]')[0].value.toLowerCase()) : (val == $('*[name="' + rule + '"]')[0].value)) ? true : false;
 				}
 				
 				else if(rule[0] == '!' && rule[1] == '=')
 				{
-					rule = rule.substr(2).trim();
-					return (val != $('*[name="' + rule + '"]')[0].value) ? true : false;
+					var casesensitive = !!rule.match(/^\!=\(i\)(.*)$/i);
+						rule = rule.substr(casesensitive ? 5 : 2).trim();
+					return (casesensitive ? (val.toLowerCase() != $('*[name="' + rule + '"]')[0].value.toLowerCase()) : (val != $('*[name="' + rule + '"]')[0].value)) ? true : false;
 				}
 			};
 
