@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Faceplate Example Document</title>
+		<style type="text/css">
+			.has-error
+			{
+				border: 1px solid red;
+			}
+		</style>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script type="text/javascript" src="faceplate.js"></script>
+		<script type="text/javascript">
+			$(function()
+			{
+				Faceplate.Form('form.testForm');
+			});
+		</script>
+	</head>
+	<body>
+		<form action="" method="post" enctype="multipart/form-data" class="testForm">
+			<div class="step">
+				<p>Step 1</p>
+				<p><input type="text" placeholder="Standard Required Text Field..." valid /></p>
+				<p><input type="text" placeholder="Email Address Field..." valid="email" /></p>
+				<p><input type="button" value="Continue Button" class="continue" /></p>
+			</div>
+			<div class="step">
+				<p>Step 2</p>
+				<p><input type="submit" value="Submit Form" /></p>
+			</div>
+		</form>
+	</body>
+</html>
