@@ -74,26 +74,9 @@ var Faceplate = new (Faceplate = function()
 			if(rule[0] == '=')
 				return !!(val == $('*[name="' + rule.substr(1).trim() + '"]')[0].value);
 
-<<<<<<< HEAD
 			// Same as above, inversed
 			else if(rule[0] == '!' && rule[1] == '=')
 				return !!(val != $('*[name="' + rule.substr(2).trim() + '"]')[0].value);
-=======
-				if(rule[0] == '=')
-				{
-					var casesensitive = !!rule.match(/^=\(i\)(.*)$/i);
-						rule = rule.substr(casesensitive ? 4 : 1).trim();
-					return (casesensitive ? (val.toLowerCase() == $('*[name="' + rule + '"]')[0].value.toLowerCase()) : (val == $('*[name="' + rule + '"]')[0].value)) ? true : false;
-				}
-
-				else if(rule[0] == '!' && rule[1] == '=')
-				{
-					var casesensitive = !!rule.match(/^\!=\(i\)(.*)$/i);
-						rule = rule.substr(casesensitive ? 5 : 2).trim();
-					return (casesensitive ? (val.toLowerCase() != $('*[name="' + rule + '"]')[0].value.toLowerCase()) : (val != $('*[name="' + rule + '"]')[0].value)) ? true : false;
-				}
-			};
->>>>>>> origin/master
 
 			// No validation ran? Must be invalid!
 			return !1;
@@ -190,17 +173,11 @@ var Faceplate = new (Faceplate = function()
 		{
 			$this.Validate($currentstep);
 
-<<<<<<< HEAD
 			if($form.find('.has-error').length == 0)
 				$currentstep = $currentstep
 					.removeClass('has-errors').hide().trigger('hide')
 					.next('.step')
 					.show().trigger('show');
-=======
-			if(!$currentstep.hasClass('has-error'))
-				$currentstep = $currentstep.hide().trigger('hide')
-					.next('.step').show().trigger('show');
->>>>>>> origin/master
 
 			else
 				$currentstep
@@ -256,23 +233,11 @@ var Faceplate = new (Faceplate = function()
 			mask.addClass(select.attr('class'));
 			select.removeClass(select.attr('class'));
 
-			select.on('change', function(e, selectedOption)
+			select.on('change', function()
 			{
 				if(select.find('option').length != list.find('li').length)
 				{
-					list.html('');
-
-					select.find('option').each(function()
-					{
-						var li = $('<li>').appendTo(list)
-							.data('value', $(this).attr('value') ? $(this).attr('value') : $(this).html())
-							.data('option', $(this))
-							.addClass($(this).is('[selected]') ? 'selected' : '')
-							.html($(this).html());
-
-						$(this).data('li', li);
-					});
-
+					list.html(select.html().replace(/(\r\n|\r|\n|\t)/g, '').replace(/<(\/)?option( |>)/gi, '<$1li$2'));
 					label.html(select.find('option[selected]').length > 0 ? select.find('option[selected]').html() :
 						(select.find('option[value="' + select[0].value + '"]').length > 0 ? select.find('option[value="' + select[0].value + '"]').html() :
 						(select.find('option').first().html())));
@@ -280,27 +245,19 @@ var Faceplate = new (Faceplate = function()
 
 				else
 				{
-					list.find('li.selected').removeClass('selected');
+					var val = String(select.val()),
+						lbl = '';
 
-					if(!selectedOption)
+					list.find('li').each(function()
 					{
-						selectedOption = select.find('option').filter(function()
-						{
-							return (($(this).attr('value') ? $(this).attr('value') : $(this).html()) == select[0].value);
-						});
+						if($(this).attr('value') == val)
+							lbl = $(this).html();
 
-						if(!selectedOption)
-						{
-							selectedOption = select.find('option').first();
-						}
-					}
+						else if($(this).html() == val)
+							lbl = val;
+					});
 
-					var li = $(selectedOption)
-						.data('li')
-						.addClass('selected');
-
-					select[0].value = li.data('value');
-					label.html(li.html());
+					label.html(lbl);
 				}
 			}).trigger('change');
 
@@ -314,12 +271,8 @@ var Faceplate = new (Faceplate = function()
 
 			list.on('click', 'li', function(e)
 			{
-<<<<<<< HEAD
 				return select.val($(this).attr('value') ? $(this).attr('value') : $(this).html())
 					.trigger('change'),
-=======
-				return select.val($(this).data('value')).trigger('change', [$(this).data('option')]),
->>>>>>> origin/master
 					mask.removeClass('active'),
 					!1;
 			});
