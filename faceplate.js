@@ -71,12 +71,21 @@ var Faceplate = new (Faceplate = function()
 			}
 
 			// If we need to match another element's value
-			if(rule[0] == '=')
-				return !!(val == $('*[name="' + rule.substr(1).trim() + '"]')[0].value);
+			if(rule.match(/^\!?=/))
+			{
+				var casein = !!rule.match(/^\!?=\(i\)/i);
 
-			// Same as above, inversed
-			else if(rule[0] == '!' && rule[1] == '=')
-				return !!(val != $('*[name="' + rule.substr(2).trim() + '"]')[0].value);
+				if(rule[0] == '=')
+					rule = (casein ? rule.substr(4) : rule.substr(1)).trim();
+
+				// Inverse match
+				else if(rule[0] == '!')
+					rule = (casein ? rule.substr(5) : rule.substr(2)).trim();
+
+				return (casein ?
+					!!(val.toLowerCase() == $('*[name="' + rule + '"]')[0].value.toLowerCase()) :
+					!!(val == $('*[name="' + rule + '"]')[0].value));
+			}
 
 			// No validation ran? Must be invalid!
 			return !1;
@@ -118,8 +127,10 @@ var Faceplate = new (Faceplate = function()
 		$steps = $form.find($options.steps).hide();
 		$currentstep = $steps.first().show();
 
-		$form.find('*[valid]').on('change blur', function()
+		$form.find('*[valid]').on('change blur', function(e, initial)
 		{
+			if(initial && initial === true) return;
+
 			$this.Validate(this);
 		});
 
@@ -237,29 +248,34 @@ var Faceplate = new (Faceplate = function()
 			{
 				if(select.find('option').length != list.find('li').length)
 				{
-					list.html(select.html().replace(/(\r\n|\r|\n|\t)/g, '').replace(/<(\/)?option( |>)/gi, '<$1li$2'));
-					label.html(select.find('option[selected]').length > 0 ? select.find('option[selected]').html() :
-						(select.find('option[value="' + select[0].value + '"]').length > 0 ? select.find('option[value="' + select[0].value + '"]').html() :
-						(select.find('option').first().html())));
+					list.html('');
+
+					select.find('option').each(function()
+					{
+						var option = $(this),
+							li = $('<li></li>')
+								.html(option.html())
+								.data('value', option.attr('value') ? option.attr('value') : option.html())
+								.data('option', option)
+								.appendTo(list);
+
+						option.data('li', li[0]);
+					});
+
+					label.html((select.find('option[selected]').length > 0 ? select.find('option[selected]') : select.find('option')).first().html());
 				}
 
 				else
 				{
-					var val = String(select.val()),
-						lbl = '';
+					label.html((select.find('option[value=""]').length > 0 ? select.find('option[value=""]') : select.find('option')).first().html());
 
 					list.find('li').each(function()
 					{
-						if($(this).attr('value') == val)
-							lbl = $(this).html();
-
-						else if($(this).html() == val)
-							lbl = val;
+						if($(this).data('value') == select.val())
+							label.html($(this).data('option').html());
 					});
-
-					label.html(lbl);
 				}
-			}).trigger('change');
+			}).trigger('change', [true]);
 
 			mask.on('click', function()
 			{
@@ -271,8 +287,10 @@ var Faceplate = new (Faceplate = function()
 
 			list.on('click', 'li', function(e)
 			{
-				return select.val($(this).attr('value') ? $(this).attr('value') : $(this).html())
-					.trigger('change'),
+				select.find('option[selected]').removeAttr('selected');
+				$(this).data('option').attr('selected', true);
+
+				return select.trigger('change'),
 					mask.removeClass('active'),
 					!1;
 			});
