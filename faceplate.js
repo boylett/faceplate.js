@@ -180,11 +180,21 @@ var Faceplate = new (Faceplate = function()
 			}
 		});
 
-		$form.find('.continue').on('click', function()
+		$form.find('.back, .prev, .previous').on('click', function()
+		{
+			$currentstep = $currentstep
+				.hide().trigger('hide')
+				.prev('.step')
+				.show().trigger('show');
+
+			return !1;
+		});
+
+		$form.find('.continue, .next').on('click', function()
 		{
 			$this.Validate($currentstep);
 
-			if($form.find('.has-error').length == 0)
+			if(!$currentstep.hasClass('has-errors'))
 				$currentstep = $currentstep
 					.removeClass('has-errors').hide().trigger('hide')
 					.next('.step')
