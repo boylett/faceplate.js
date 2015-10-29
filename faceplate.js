@@ -298,8 +298,11 @@ var Faceplate = new (Faceplate = function()
 
 			list.on('click', 'li', function(e)
 			{
+				var option = $($(this).data('option'));
+
 				select.find('option[selected]').removeAttr('selected');
-				$(this).data('option').attr('selected', true);
+
+				select[0].value = option.attr('value') ? option.attr('value') : option.text().trim();
 
 				return select.trigger('change'),
 					mask.removeClass('active'),
